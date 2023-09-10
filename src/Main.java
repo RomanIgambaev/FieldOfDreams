@@ -12,29 +12,49 @@ public class Main {
     static void searchCorrectLetter(String[] answer) {
         String[] scoreboard = new String[answer.length];
         Arrays.fill(scoreboard, "_");
+        String[] guessedLetters = new String[32];
+        System.out.println(String.join(" ", scoreboard));
+
 
         while (correctLetter < answer.length) {
-            int points = random.nextInt(100, 1000);
+            int min = 50;
+            int step = 50;
+            int points = min + step * random.nextInt(19);
             System.out.println("На барабане " + points + " очков. Назовите букву:");
-            String letPlayer = scanner.next();
-            String copyCorrectLetter = "p";
+            String letPlayer = scanner.next().toLowerCase();
+
+            if (letPlayer.length() != 1) {
+                System.out.println("Пожалуйста, введите только одну букву.");
+                continue;
+            }
+
+            char letter = letPlayer.charAt(0);
+            if (letter < 'а' || letter > 'я') {
+                System.out.println("Пожалуйста, введите букву из русского алфавита.");
+                continue;
+            }
+
+            if (guessedLetters[letter - 'а'] != null) {
+                System.out.println("Вы уже вводили эту букву. Попробуйте другую.");
+                continue;
+            }
 
             for (int j = 0; j < answer.length; j++) {
-                if (letPlayer.equals(answer[j])) {
+                if (letter == answer[j].charAt(0)) {
                     correctLetter++;
                     sumPoints += points;
-                    scoreboard[j] = letPlayer;
-                    copyCorrectLetter = letPlayer;
+                    scoreboard[j] = String.valueOf(letter);
+                    guessedLetters[letter - 'а'] = String.valueOf(letter);
                 }
             }
             System.out.println(String.join(" ", scoreboard));
 
-
             if (correctLetter == answer.length) {
-                    System.out.println("Вы победили, отгадав все буквы, ваши очки: " + sumPoints);
+                System.out.println("Вы победили, отгадав все буквы, ваши очки: " + sumPoints);
             }
         }
     }
+
 
     public static void main(String[] args) {
         System.out.println("Добрый вечер, здравствуйте, уважаемые дамы и господа.Пятница.В эфире капитал шоу: Поле чудес");
@@ -43,14 +63,13 @@ public class Main {
         question[1] = "Польский ученый-математик Гуго Дионисий Штейнгауз, прославившийся также своими афоризмами, говорил: «Комплимент женщине должен быть правдивее, чем...»";
         question[2] = "В Швеции существует налог на собак, от которого многие пытаются уклониться. В налоговой инспекции в Стокгольме придумали забавный способ борьбы с неплательщиками: сотрудница службы Эльфрида Карлсон ходит по домам и делает это";
         question[3] = "Что использовали в Китае для глажки белья вместо утюга?";
-        int questCount = random.nextInt(question.length);
 
+        int questCount = random.nextInt(question.length);
 
         switch (questCount) {
             case 0:
                 System.out.println(question[questCount]);
                 answer = new String[]{"ж", "у", "п", "а"};
-                String[] scoreboard = new String[answer.length];
                 searchCorrectLetter(answer);
                 break;
             case 1:
@@ -65,7 +84,7 @@ public class Main {
                 break;
             case 3:
                 System.out.println(question[questCount]);
-                answer = new String[]{"с", "к", "о", "в", "о", "р", "д", "а"};
+                answer = new String[]{"с", "к", "о", "в", "о", "р","о", "д", "а"};
                 searchCorrectLetter(answer);
                 break;
         }
